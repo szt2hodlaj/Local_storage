@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #container {
+            width: 300px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Storage Demo</h1>
+        <label for="storageType">Válassz tárolási módot:</label>
+        <select id="storageType">
+            <option value="local">Local Storage</option>
+            <option value="session">Session Storage</option>
+        </select>
+        <br><br>
+        <label for="key">Key:</label>
+        <input type="text" id="key">
+        <br><br>
+        <label for="value">Value:</label>
+        <input type="text" id="value">
+        <br><br>
+        <button id="saveButton">Mentés</button>
+        <br><br>
+        <div id="data"></div>
+        <br><br>
+        <button id="clearLocal">Local Storage Törlés</button>
+        <button id="clearSession">Session Storage Törlés</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const storageTypeSelector = document.getElementById('storageType');
+        const keyInput = document.getElementById('key');
+        const valueInput = document.getElementById('value');
+        const saveButton = document.getElementById('saveButton');
+        const dataDisplay = document.getElementById('data');
+        const clearLocalButton = document.getElementById('clearLocal');
+        const clearSessionButton = document.getElementById('clearSession');
+
+        saveButton.addEventListener('click', function () {
+            const storageType = storageTypeSelector.value;
+            const key = keyInput.value;
+            const value = valueInput.value;
+
+            if (storageType && key && value) {
+                if (storageType === 'local') {
+                    localStorage.setItem(key, value);
+                } else if (storageType === 'session') {
+                    sessionStorage.setItem(key, value);
+                }
+                displayStoredData();
+            }
+        });
+
+        clearLocalButton.addEventListener('click', function () {
+            localStorage.clear();
+            displayStoredData();
+        });
+
+        clearSessionButton.addEventListener('click', function () {
+            sessionStorage.clear();
+            displayStoredData();
+        });
+
+        function displayStoredData() {
+            const storageType = storageTypeSelector.value;
+            const data = [];
+
+            if (storageType === 'local') {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const value = localStorage.getItem(key);
+                    data.push(`${key}: ${value}`);
+                }
+            } else if (storageType === 'session') {
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    const value = sessionStorage.getItem(key);
+                    data.push(`${key}: ${value}`);
+                }
+            }
+
+            dataDisplay.innerHTML = data.length > 0 ? data.join('<br>') : 'Adat nem érhető el';
+        }
+
+
+        displayStoredData();
+    });
+    </script>
+</body>
+</html>
